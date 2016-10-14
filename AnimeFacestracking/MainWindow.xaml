@@ -1,0 +1,34 @@
+﻿<Window x:Class="AnimeFacestracking.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AnimeFacestracking"
+        mc:Ignorable="d"
+        Title="动漫脸部特征库标记器" Height="750" Width="810" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Name="button_ReadFile" Content="读取" Height="30" Width="50" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="button_ReadFile_Click" />
+        <Button Grid.Row="0" Name="button_Start" Content="播放" Height="30" Width="50" Margin="80,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="button_Start_Click" />
+        <Button Grid.Row="0" Name="button_SaveFile" Content="存储" Height="30" Width="50" Margin="10,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="button_SaveFile_Click" />
+        <Button Grid.Row="0" Name="button_Stop" Content="停止" Height="30" Width="50" Margin="80,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Hidden" Click="button_Stop_Click" />
+        <Label Content="间隔：" Grid.Row="0" Margin="150,50,0,0" FontSize="15" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TextBox Grid.Row="0" Name="textBox_Time" Text="10" FontSize="22" Height="30" Width="70" Margin="200,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <CheckBox Grid.Row="0" Name="checkBox_UseCuda" Content="使用Cuda" Margin="280,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <CheckBox Grid.Row="0" Name="checkBox_InputName" Content="人物识别" Margin="280,67,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="checkBox_InputName_Click" />
+        <Image Grid.Row="1" Name="image_Show" Source="{Binding bitmapSource}"  HorizontalAlignment="Left" VerticalAlignment="Top" Height="600" Width="800" MouseLeftButtonDown="image_Show_MouseLeftButtonDown" MouseRightButtonDown="image_Show_MouseRightButtonDown"/>
+        <TextBlock Grid.Row="0" Name="textBlock_ReadAnimeCount" Text="{Binding animeCount,StringFormat='动画数：{0}'}" Margin="200,15,0,0" FontSize="15" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="0" Name="textBlock_FinishedCount" Text="{Binding finishedCount,StringFormat='完成：{0}'}" Margin="300,15,0,0" FontSize="15" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="0" Name="textBlock_SuccessedCount" Text="{Binding faceCheckSuccessed,StringFormat='捕捉：{0}'}" Margin="400,15,0,0" FontSize="15" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TextBlock Grid.Row="0" Name="textBlock_ErrorCount" Text="{Binding errorCount,StringFormat='报错：{0}'}" Margin="500,15,0,0" FontSize="15" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <Button Grid.Row="0" Name="button_CheckInfoData" Content="复查" Height="30" Width="50" Margin="0,10,100,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="button_CheckInfoData_Click" />
+        <Button Grid.Row="0" Name="button_ReadInfoData" Content="读取Info" Height="30" Width="70" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="button_ReadInfoData_Click" />
+        <Button Grid.Row="0" Name="button_SaveInfodata" Content="暂存" Height="30" Width="50" Margin="0,50,100,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="button_SaveInfodata_Click" />
+        <Button Grid.Row="0" Name="button_ReadImage" Content="换图" Height="30" Width="50" Margin="0,50,30,0" VerticalAlignment="Top" HorizontalAlignment="Right" IsDefault="True" Click="button_ReadImage_Click" />
+        <Button Grid.Row="0" Name="button_SaveFileReadData" Content="读目录" Height="30" Width="60" Margin="0,10,170,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="button_SaveFileReadData_Click" />
+        <TextBlock Grid.Row="0" Name="textBlcok_Result" Text="" Margin="0,50,150,0" FontSize="30" VerticalAlignment="Top" HorizontalAlignment="Right" />
+    </Grid>
+</Window>
