@@ -95,6 +95,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CntkBitmapExtensions.cs" />
     <Compile Include="DataUpdate.cs" />
     <Compile Include="DetectFace.cs" />
     <Compile Include="FaceDetect.cs" />

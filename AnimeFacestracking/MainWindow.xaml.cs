@@ -52,7 +52,7 @@ namespace AnimeFacestracking
         FaceDetect faceDetect;
         public string[] name;
         bool needInputName = false;
-        Image<Gray, byte> image_usedToNamed;
+        Image<Rgb, byte> image_usedToNamed;
         XmlDocument docu;
 
         public MainWindow()
@@ -70,13 +70,13 @@ namespace AnimeFacestracking
             textBlock_SuccessedCount.DataContext = dataUpdate;
             textBlock_ErrorCount.DataContext = dataUpdate;
             name = new string[7];
-            name[0] = "白客";
-            name[1] = "小爱";
-            name[2] = "本煜";
-            name[3] = "孔连顺";
-            name[4] = "郑合惠子";
-            name[5] = "柯达";
-            name[6] = "葛布";
+            name[0] = "有马公生";
+            name[1] = "宫园薰";
+            name[2] = "泽部椿";
+            name[3] = "渡亮太";
+            name[4] = "相座武士";
+            name[5] = "井川绘见";
+            name[6] = "相座凪";
         }
 
         private void button_Start_Click(object sender, RoutedEventArgs e)
@@ -315,7 +315,7 @@ namespace AnimeFacestracking
             int personCount = 1;
             autoFacesTrack.Sort();
             // used the image not has been draw the bounding box.
-            image_usedToNamed = mat_ShowImage.ToImage<Gray, byte>();
+            image_usedToNamed = mat_ShowImage.ToImage<Rgb, byte>();
             foreach (System.Drawing.Rectangle face in autoFacesTrack)
             {
                 CvInvoke.Rectangle(mat_ShowImage, face, new Bgr(System.Drawing.Color.Red).MCvScalar, 2);
@@ -434,36 +434,42 @@ namespace AnimeFacestracking
                             string time = GetTimeStamp();
                             string fileName = saveFacesTrackResultPath + @"\" + time + "_" + renameCount + ".jpg";
                             renameCount++;
-                            Image<Gray, byte> subImage = image_usedToNamed.GetSubRect(face).Resize(100, 100, Emgu.CV.CvEnum.Inter.Cubic);
-                            subImage._EqualizeHist();
+                            Image<Rgb, byte> subImage = image_usedToNamed.GetSubRect(face).Resize(32, 32, Emgu.CV.CvEnum.Inter.Cubic);
+                            //subImage._EqualizeHist();
                             subImage.Save(fileName);
+
+                            List<float> rawImage = subImage.Bitmap.ParallelExtractCHW();
+
+                            save_training_data(selectedName - 1, ref rawImage);
                             subImage.Dispose();
                             subImage = null;
+                            rawImage = null;
                             // save xml
-                            switch(selectedName)
-                            {
-                                case 1:
-                                    save_training_data(fileName, 1.ToString());
-                                    break;
-                                case 2:
-                                    save_training_data(fileName, 2.ToString());
-                                    break;
-                                case 3:
-                                    save_training_data(fileName, 3.ToString());
-                                    break;
-                                case 4:
-                                    save_training_data(fileName, 4.ToString());
-                                    break;
-                                case 5:
-                                    save_training_data(fileName, 5.ToString());
-                                    break;
-                                case 6:
-                                    save_training_data(fileName, 6.ToString());
-                                    break;
-                                case 7:
-                                    save_training_data(fileName, 7.ToString());
-                                    break;
-                            }
+
+                            //switch(selectedName)
+                            //{
+                            //    case 1:
+                            //        save_training_data(fileName, 1.ToString());
+                            //        break;
+                            //    case 2:
+                            //        save_training_data(fileName, 2.ToString());
+                            //        break;
+                            //    case 3:
+                            //        save_training_data(fileName, 3.ToString());
+                            //        break;
+                            //    case 4:
+                            //        save_training_data(fileName, 4.ToString());
+                            //        break;
+                            //    case 5:
+                            //        save_training_data(fileName, 5.ToString());
+                            //        break;
+                            //    case 6:
+                            //        save_training_data(fileName, 6.ToString());
+                            //        break;
+                            //    case 7:
+                            //        save_training_data(fileName, 7.ToString());
+                            //        break;
+                            //}
 
                         }
                     }
@@ -480,6 +486,27 @@ namespace AnimeFacestracking
                 }
 
             }
+        }
+
+        private bool save_training_data(int personIndex, ref List<float> rawImage)
+        {
+            int[] person = new int[7] { 0,0,0,0,0,0,0 };
+            person[personIndex] = 1;
+            using (StreamWriter SW = new StreamWriter(new FileStream(saveFacesTrackResultPath + @"\data.txt",FileMode.Append)))
+            {
+                SW.Write("|labels ");
+                for(int i = 0; i < 7; i++)
+                {
+                    SW.Write(person[i] + " ");
+                }
+                SW.Write("|features");
+                foreach(float f in rawImage)
+                {
+                    SW.Write(" " + f);
+                }
+                SW.WriteLine();
+            }
+            return true;
         }
 
         private bool save_training_data(string fileName, string personName)
