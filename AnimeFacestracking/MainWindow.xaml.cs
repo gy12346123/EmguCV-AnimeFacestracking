@@ -54,6 +54,7 @@ namespace AnimeFacestracking
         bool needInputName = false;
         Image<Rgb, byte> image_usedToNamed;
         XmlDocument docu;
+        const int labelDim = 14;
 
         public MainWindow()
         {
@@ -70,13 +71,13 @@ namespace AnimeFacestracking
             textBlock_SuccessedCount.DataContext = dataUpdate;
             textBlock_ErrorCount.DataContext = dataUpdate;
             name = new string[7];
-            name[0] = "有马公生";
-            name[1] = "宫园薰";
-            name[2] = "泽部椿";
-            name[3] = "渡亮太";
-            name[4] = "相座武士";
-            name[5] = "井川绘见";
-            name[6] = "相座凪";
+            name[0] = "一条萤";
+            name[1] = "宫内莲华";
+            name[2] = "越谷小鞠";
+            name[3] = "越谷夏海";
+            name[4] = "宫内光华";
+            name[5] = "富士宫木实";
+            name[6] = "越谷卓";
         }
 
         private void button_Start_Click(object sender, RoutedEventArgs e)
@@ -440,7 +441,8 @@ namespace AnimeFacestracking
 
                             List<float> rawImage = subImage.Bitmap.ParallelExtractCHW();
 
-                            save_training_data(selectedName - 1, ref rawImage);
+                            save_training_data(selectedName + 6, ref rawImage);
+                            save_convert_data(selectedName + 6, fileName);
                             subImage.Dispose();
                             subImage = null;
                             rawImage = null;
@@ -490,12 +492,16 @@ namespace AnimeFacestracking
 
         private bool save_training_data(int personIndex, ref List<float> rawImage)
         {
-            int[] person = new int[7] { 0,0,0,0,0,0,0 };
+            int[] person = new int[labelDim];
+            for (int i = 0; i < labelDim; i++)
+            {
+                person[i] = 0;
+            }
             person[personIndex] = 1;
             using (StreamWriter SW = new StreamWriter(new FileStream(saveFacesTrackResultPath + @"\data.txt",FileMode.Append)))
             {
                 SW.Write("|labels ");
-                for(int i = 0; i < 7; i++)
+                for(int i = 0; i < labelDim; i++)
                 {
                     SW.Write(person[i] + " ");
                 }
@@ -504,6 +510,17 @@ namespace AnimeFacestracking
                 {
                     SW.Write(" " + f);
                 }
+                SW.WriteLine();
+            }
+            return true;
+        }
+
+        private bool save_convert_data(int personIndex,string filePath)
+        {
+            using (StreamWriter SW = new StreamWriter(new FileStream(saveFacesTrackResultPath + @"\path.txt",FileMode.Append)))
+            {
+                SW.Write(filePath + " ");
+                SW.Write(personIndex.ToString());
                 SW.WriteLine();
             }
             return true;
